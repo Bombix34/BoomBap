@@ -1,18 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class BossEntity : Entity
 {
-    // Start is called before the first frame update
-    void Start()
+    public List<ActionPattern> ActionPatterns { get; set; }
+    private List<ActionBase> actions;
+
+    public override void NextAction()
     {
-        
+        if(this.actions.Count == 0)
+        {
+            this.ChangePattern();
+        }
+
+        this.CurrentAction = actions.Pop();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ChangePattern()
     {
-        
+        this.actions = this.ActionPatterns.PickRandom().actions;
     }
 }
