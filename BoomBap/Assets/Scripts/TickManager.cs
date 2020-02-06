@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TickManager : MonoBehaviour
+public class TickManager : Singleton<TickManager>
 {
     [SerializeField]
     private MusicDatas m_currentMusic;
@@ -68,5 +68,6 @@ public class TickManager : MonoBehaviour
     private void TickEvent()
     {
         m_bpmUI.Feedback();
+        ActionManager.Instance.ResolveTurn();
     }
 }
