@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BpmUI : MonoBehaviour
 {
@@ -17,18 +18,8 @@ public class BpmUI : MonoBehaviour
 
     public void Feedback()
     {
-        StartCoroutine(LaunchFeedback());
-    }
+        m_cadre.DOFade(m_settings.AlphaOnBeat, 0f);
+        m_cadre.DOFade(0f, m_settings.FadeSpeed);
 
-    private IEnumerator LaunchFeedback()
-    {
-        float alphaAmount = m_settings.AlphaOnBeat;
-        m_cadre.color = new Color(m_cadre.color.r, m_cadre.color.g, m_cadre.color.b, alphaAmount);
-        while (m_cadre.color.a > 0f)
-        {
-            m_cadre.color = new Color(m_cadre.color.r, m_cadre.color.g, m_cadre.color.b, alphaAmount);
-            alphaAmount -= (Time.fixedDeltaTime*m_settings.FadeSpeed);
-            yield return new WaitForEndOfFrame();
-        }
     }
 }

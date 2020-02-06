@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 2818451683360052857}
   - component: {fileID: 2818451683360052856}
   - component: {fileID: 2818451683360052836}
+  - component: {fileID: 112924897}
   m_Layer: 5
   m_Name: MainGameUI
   m_TagString: Untagged
@@ -194,6 +195,26 @@ MonoBehaviour:
   m_currentMusic: {fileID: 11400000, guid: 8374af2f11132a642b68e3f058369fdb, type: 2}
   m_bpmUI: {fileID: 2818451685207529079}
   m_audioSource: {fileID: 2818451684500408929}
+  m_songPositionInBeats: 0
+  m_songStartTime: 0
+  test: 0
+--- !u!114 &112924897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2818451683360052859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd38d0ab05b8a314eabc1f035847186b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRecordingBpm: 0
+  startTime: 0
+  timeInterval: 0
+  textBPM: {fileID: 2818451684613874396}
+  startTimeText: {fileID: 2818451683753448164}
 --- !u!1 &2818451683753448166
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +340,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.061
+  m_Volume: 0.247
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -413,7 +434,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2818451684613874399}
   - component: {fileID: 2818451684613874397}
-  - component: {fileID: 2818451684613874394}
   - component: {fileID: 2818451684613874396}
   m_Layer: 5
   m_Name: TestBPM
@@ -450,21 +470,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2818451684613874398}
   m_CullTransparentMesh: 0
---- !u!114 &2818451684613874394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2818451684613874398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd38d0ab05b8a314eabc1f035847186b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startTime: 0
-  timeInterval: 0
-  startTimeText: {fileID: 2818451683753448164}
 --- !u!114 &2818451684613874396
 MonoBehaviour:
   m_ObjectHideFlags: 0

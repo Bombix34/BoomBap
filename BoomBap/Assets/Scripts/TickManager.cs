@@ -15,7 +15,8 @@ public class TickManager : Singleton<TickManager>
     private float m_secPerBeat;
 
     //Current song position, in seconds
-    private float m_songPosition;
+    private float m_songPositionSinceStart;
+    private float m_songPositionSinceBeat;
 
     //Current song position, in beats
     public float m_songPositionInBeats;
@@ -23,7 +24,7 @@ public class TickManager : Singleton<TickManager>
     private float m_prevSongPositionInBeats=0f;
 
     //How many seconds have passed since the song started
-    public float m_dspSongTime;
+    public float m_songStartTime;
 
     public float test = 0f;
 
@@ -35,7 +36,7 @@ public class TickManager : Singleton<TickManager>
         m_secPerBeat = 60f /m_currentMusic.BPM;
 
         //Record the time when the music starts
-        m_dspSongTime = (float)AudioSettings.dspTime;
+        m_songStartTime = (float)AudioSettings.dspTime;
 
         m_audioSource.Play();
     }
@@ -43,16 +44,16 @@ public class TickManager : Singleton<TickManager>
     private void Update()
     {
         //determine how many seconds since the song started
-        m_songPosition = (float)(AudioSettings.dspTime - m_dspSongTime);
+        m_songPositionSinceStart = (float)(AudioSettings.dspTime - m_songStartTime);
 
-        //determine how many beats since the song started
-        m_songPositionInBeats = m_songPosition / m_secPerBeat;
-
-        if(m_songPosition<m_currentMusic.StartTime)
+        if(m_songPositionSinceStart<m_currentMusic.StartTime)
         {
             return;
         }
-        if((int)m_songPositionInBeats!=(int)m_prevSongPositionInBeats)
+        m_songPositionSinceBeat = (float)(AudioSettings.dspTime - m_songStartTime);
+        //determine how many beats since the song started
+        m_songPositionInBeats = m_songPositionSinceBeat / m_secPerBeat;
+        if ((int)m_songPositionInBeats != (int)m_prevSongPositionInBeats)
         {
             m_prevSongPositionInBeats = m_songPositionInBeats;
             TickEvent();
@@ -71,7 +72,7 @@ public class TickManager : Singleton<TickManager>
 
     public AudioSource SourceAudio { get => m_audioSource; }
 
-    public float TimeSinceSongStart { get => m_songPosition; }
+    public float TimeSinceSongStart { get => m_songPositionSinceStart; }
 
     #endregion
 }
