@@ -12,12 +12,7 @@ public class MusicDatas : ScriptableObject
     [SerializeField]
     [Range(50,160)]
     private int m_BPM = 80;
-    public int BPM { get => m_BPM; }
-
-    [SerializeField]
-    private float m_timeInterval;
-    public float TimeInterval { get => m_timeInterval; set { m_timeInterval = value; } }
-
+    public int BPM { get => m_BPM; set { m_BPM = value; } }
 
     [SerializeField]
     private float m_startTime;

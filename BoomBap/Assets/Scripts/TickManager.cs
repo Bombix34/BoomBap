@@ -2,65 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TickManager : MonoBehaviour
+public class TickManager : Singleton<TickManager>
 {
     [SerializeField]
     private MusicDatas m_currentMusic;
-    private float m_waitTime=10f;
-    private float m_timeInterval;
-    private bool isLaunch = false;
-
-    private float m_timeSinceLastTick=0f;
-
     [SerializeField]
     private BpmUI m_bpmUI;
-
     [SerializeField]
     private AudioSource m_audioSource;
 
+    //The number of seconds for each song beat
+    private float m_secPerBeat;
+
+    //Current song position, in seconds
+    private float m_songPosition;
+
+    //Current song position, in beats
+    public float m_songPositionInBeats;
+
+    private float m_prevSongPositionInBeats=0f;
+
+    //How many seconds have passed since the song started
+    public float m_dspSongTime;
+
+    public float test = 0f;
+
     private void Start()
     {
-        m_waitTime = m_currentMusic.StartTime;
-        m_timeInterval = m_currentMusic.TimeInterval;
-        StartMusic();
+        m_audioSource.clip = m_currentMusic.Song;
+
+        //Calculate the number of seconds in each beat
+        m_secPerBeat = 60f /m_currentMusic.BPM;
+
+        //Record the time when the music starts
+        m_dspSongTime = (float)AudioSettings.dspTime;
+
+        m_audioSource.Play();
     }
 
     private void Update()
     {
-        WaitForMusicStart();
-        CalculateTime();
-        CheckTickEvent();
-    }
+        //determine how many seconds since the song started
+        m_songPosition = (float)(AudioSettings.dspTime - m_dspSongTime);
 
-    private void StartMusic()
-    {
-        m_audioSource.clip = m_currentMusic.Song;
-        m_audioSource.Play();
-    }
+        //determine how many beats since the song started
+        m_songPositionInBeats = m_songPosition / m_secPerBeat;
 
-    private void WaitForMusicStart()
-    {
-        if (isLaunch)
-            return;
-        if (Time.timeSinceLevelLoad>=m_currentMusic.StartTime)
+        if(m_songPosition<m_currentMusic.StartTime)
         {
-            TickEvent();
-            isLaunch = true;   
+            return;
         }
-    }
-
-    private void CalculateTime()
-    {
-        if (!isLaunch)
-            return;
-        m_timeSinceLastTick += Time.deltaTime;
-    }
-
-    private void CheckTickEvent()
-    {
-        if(m_timeSinceLastTick>=m_timeInterval)
+        if((int)m_songPositionInBeats!=(int)m_prevSongPositionInBeats)
         {
-            m_timeSinceLastTick = 0f;
+            m_prevSongPositionInBeats = m_songPositionInBeats;
             TickEvent();
         }
     }
@@ -69,4 +63,14 @@ public class TickManager : MonoBehaviour
     {
         m_bpmUI.Feedback();
     }
+
+    #region GET/SET
+
+    public MusicDatas SongDatas { get => m_currentMusic; }
+
+    public AudioSource SourceAudio { get => m_audioSource; }
+
+    public float TimeSinceSongStart { get => m_songPosition; }
+
+    #endregion
 }

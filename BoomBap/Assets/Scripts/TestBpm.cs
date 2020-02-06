@@ -5,8 +5,13 @@ using UnityEngine.UI;
 
 public class TestBpm : MonoBehaviour
 {
-    private float[] timesInput;
-    private int index = 0;
+
+    private TickManager tickManager;
+
+    private List<float> timesInputList;
+
+    [SerializeField]
+    private bool isRecordingBpm = false;
 
     [SerializeField]
     private float startTime = 0f;
@@ -14,43 +19,51 @@ public class TestBpm : MonoBehaviour
     [SerializeField]
     private float timeInterval = 0f;
 
+    [SerializeField]
     private Text textBPM;
     [SerializeField]
     private Text startTimeText;
 
     private void Start()
     {
-        textBPM = GetComponent<Text>();
         textBPM.text = "";
         startTimeText.text = "";
-        timesInput = new float[2] { 0f, 0f };
+        timesInputList = new List<float>();
+        tickManager = GetComponent<TickManager>();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            timesInput[index] = Time.timeSinceLevelLoad;
-            index++;
-            if (index >= timesInput.Length)
-            {
-                index = 0;
-            }
+            timesInputList.Add((tickManager.TimeSinceSongStart));
             ShowBPM((int)CalculateBPM());
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
             startIsSetup = true;
-            startTime = Time.timeSinceLevelLoad;
+            startTime = tickManager.TimeSinceSongStart;
             ShowStartTime(startTime);
         }
     }
 
     private float CalculateBPM()
     {
+        if(timesInputList.Count<2)
+        {
+            return 0f;
+        }
         float deltaTime=0f;
-        timeInterval = index == 0 ? timesInput[1] - timesInput[0] : timesInput[0] - timesInput[1];
+        for(int i = 0; i < timesInputList.Count-1; ++i)
+        {
+            deltaTime += timesInputList[i + 1] - timesInputList[i];
+        }
+        timeInterval = deltaTime / (timesInputList.Count);
         deltaTime = 60f / timeInterval;
+        if(isRecordingBpm)
+        {
+            tickManager.SongDatas.BPM = (int)deltaTime;
+        }
         return deltaTime;
     }
 
