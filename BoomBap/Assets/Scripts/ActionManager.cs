@@ -5,6 +5,13 @@ public class ActionManager : MonoBehaviour
     public Entity PlayerEntity;
     public Entity BossEntity;
 
+    public void ResolveTurn()
+    {
+        ActionBase playerAction = PlayerEntity.CurrentAction;
+        ActionBase bossAction = BossEntity.CurrentAction;
+        this.ResolveActions(playerAction, bossAction);
+    }
+
     private void ResolveActions(ActionBase playerAction, ActionBase bossAction)
     {
         var playerResolver = playerAction.Resolve(bossAction);
@@ -21,5 +28,7 @@ public class ActionManager : MonoBehaviour
         {
             entity.Life.DoDamage(actionResolver.Damage);
         }
+
+        entity.NextAction();
     }
 }
