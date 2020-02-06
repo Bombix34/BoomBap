@@ -2,5 +2,5 @@
 
 public class ActionPattern
 {
-    public List<ActionBase> actions;
+    public List<ActionBase> Actions { get; protected set; }
 }

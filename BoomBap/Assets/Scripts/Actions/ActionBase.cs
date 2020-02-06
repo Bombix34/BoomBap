@@ -1,8 +1,8 @@
 ﻿public abstract class ActionBase
 {
-    public ActionResolver Resolve(ActionBase action)
+    public ActionResolution Resolve(ActionBase action)
     {
-        ActionResolver actionResolver;
+        ActionResolution actionResolver;
         switch (action)
         {
             case ActionNone actionNone:
@@ -29,9 +29,9 @@
     /// </summary>
     /// <param name="actionNone">the none action against</param>
     /// <returns>An action resolver</returns>
-    protected virtual ActionResolver ResolveNone(ActionNone actionNone)
+    protected virtual ActionResolution ResolveNone(ActionNone actionNone)
     {
-        return ActionResolver.Default;
+        return ActionResolution.Default;
     }
 
     /// <summary>
@@ -39,9 +39,9 @@
     /// </summary>
     /// <param name="actionPrepare">the prepare action against</param>
     /// <returns>An action resolver</returns>
-    protected virtual ActionResolver ResolvePrepare(ActionPrepare actionPrepare)
+    protected virtual ActionResolution ResolvePrepare(ActionPrepare actionPrepare)
     {
-        return ActionResolver.Default;
+        return ActionResolution.Default;
     }
 
     /// <summary>
@@ -49,9 +49,9 @@
     /// </summary>
     /// <param name="actionAttack">the attack action against</param>
     /// <returns>An action resolver</returns>
-    protected virtual ActionResolver ResolveAttack(ActionAttack actionAttack)
+    protected virtual ActionResolution ResolveAttack(ActionAttack actionAttack)
     {
-        return ActionResolver.Default;
+        return ActionResolution.Default;
     }
 
     /// <summary>
@@ -59,8 +59,8 @@
     /// </summary>
     /// <param name="actionParry">the parry action against</param>
     /// <returns>An action resolver</returns>
-    protected virtual ActionResolver ResolveParry(ActionParry actionParry)
+    protected virtual ActionResolution ResolveParry(ActionParry actionParry)
     {
-        return ActionResolver.Default;
+        return ActionResolution.Default;
     }
 }

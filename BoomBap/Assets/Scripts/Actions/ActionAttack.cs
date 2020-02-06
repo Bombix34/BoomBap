@@ -2,22 +2,27 @@
 {
     public int Level { get; private set; }
 
-    protected override ActionResolver ResolveNone(ActionNone actionNone)
+    public ActionAttack(int level)
+    {
+        this.Level = level;
+    }
+
+    protected override ActionResolution ResolveNone(ActionNone actionNone)
     {
         return this.GetApplyFullDamageResolver();
     }
 
-    protected override ActionResolver ResolvePrepare(ActionPrepare actionPrepare)
+    protected override ActionResolution ResolvePrepare(ActionPrepare actionPrepare)
     {
         return this.GetApplyFullDamageResolver();
     }
 
-    protected override ActionResolver ResolveAttack(ActionAttack actionAttack)
+    protected override ActionResolution ResolveAttack(ActionAttack actionAttack)
     {
         return this.GetApplyFullDamageResolver();
     }
 
-    protected override ActionResolver ResolveParry(ActionParry actionParry)
+    protected override ActionResolution ResolveParry(ActionParry actionParry)
     {
         var damage = this.Level - actionParry.Level;
 
@@ -26,15 +31,15 @@
             damage = 0;
         }
 
-        return new ActionResolver
+        return new ActionResolution
         {
             Damage = damage
         };
     }
 
-    private ActionResolver GetApplyFullDamageResolver()
+    private ActionResolution GetApplyFullDamageResolver()
     {
-        return new ActionResolver
+        return new ActionResolution
         {
             Damage = Level
         };

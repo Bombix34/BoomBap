@@ -2,7 +2,12 @@
 
 public class BossEntity : Entity
 {
-    public List<ActionPattern> ActionPatterns { get; set; }
+    public List<ActionPattern> ActionPatterns { get; set; } = new List<ActionPattern>()
+    {
+        new BossPatternOne(),
+        new BossPatternTwo()
+    };
+
     private List<ActionBase> actions;
 
     public override void NextAction()
@@ -17,6 +22,6 @@ public class BossEntity : Entity
 
     private void ChangePattern()
     {
-        this.actions = this.ActionPatterns.PickRandom().actions;
+        this.actions = this.ActionPatterns.PickRandom().Actions;
     }
 }

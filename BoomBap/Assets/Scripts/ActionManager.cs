@@ -14,15 +14,15 @@ public class ActionManager : MonoBehaviour
 
     private void ResolveActions(ActionBase playerAction, ActionBase bossAction)
     {
-        var playerResolver = playerAction.Resolve(bossAction);
-        var bossResolver = bossAction.Resolve(playerAction);
+        var bossResolution = playerAction.Resolve(bossAction);
+        var playerResolution = bossAction.Resolve(playerAction);
 
-        this.ApplyResolver(PlayerEntity, playerResolver);
-        this.ApplyResolver(BossEntity, bossResolver);
+        this.ApplyResolver(PlayerEntity, playerResolution);
+        this.ApplyResolver(BossEntity, bossResolution);
     }
 
 
-    private void ApplyResolver(Entity entity, ActionResolver actionResolver)
+    private void ApplyResolver(Entity entity, ActionResolution actionResolver)
     {
         if(actionResolver.Damage > 0)
         {
