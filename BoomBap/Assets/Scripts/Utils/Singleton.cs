@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Inherit from this base class to create a singleton.
@@ -10,6 +11,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     private static bool m_ShuttingDown = false;
     private static object m_Lock = new object();
     private static T m_Instance;
+    // called first
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
     /// <summary>
     /// Access singleton instance through this propriety.
@@ -49,7 +55,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             }
         }
     }
-
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        m_ShuttingDown = false;
+    }
 
     private void OnApplicationQuit()
     {
