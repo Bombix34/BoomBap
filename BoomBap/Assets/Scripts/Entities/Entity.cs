@@ -6,7 +6,7 @@ public abstract class Entity : MonoBehaviour
     public ActionBase CurrentAction { get; protected set; }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         this.Life = GetComponent<Life>();
     }

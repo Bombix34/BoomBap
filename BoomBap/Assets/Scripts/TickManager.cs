@@ -62,6 +62,7 @@ public class TickManager : Singleton<TickManager>
     private void TickEvent()
     {
         m_bpmUI.Feedback();
+        ActionManager.Instance.ResolveTurn();
     }
 
     #region GET/SET

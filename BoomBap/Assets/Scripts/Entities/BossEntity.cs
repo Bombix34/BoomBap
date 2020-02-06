@@ -8,20 +8,20 @@ public class BossEntity : Entity
         new BossPatternTwo()
     };
 
-    private List<ActionBase> actions;
+    public List<ActionBase> Actions { get; private set; } = new List<ActionBase>();
 
     public override void NextAction()
     {
-        if(this.actions.Count == 0)
+        if(this.Actions.Count == 0)
         {
             this.ChangePattern();
         }
 
-        this.CurrentAction = actions.Pop();
+        this.CurrentAction = Actions.Pop();
     }
 
     private void ChangePattern()
     {
-        this.actions = this.ActionPatterns.PickRandom().Actions;
+        this.Actions = new List<ActionBase>(this.ActionPatterns.PickRandom().Actions);
     }
 }

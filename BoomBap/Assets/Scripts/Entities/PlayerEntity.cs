@@ -5,7 +5,14 @@ public class PlayerEntity : Entity
 {
     public int ComboCount => actionsCombo.Count; 
 
-    private List<ActionBase> actionsCombo;
+    private List<ActionBase> actionsCombo = new List<ActionBase>();
+    private bool alreadyPlayedThisTurn = false;
+
+    protected override void Start()
+    {
+        base.Start();
+        this.CurrentAction = ActionNone.Default;
+    }
 
     void Update()
     {
@@ -26,6 +33,7 @@ public class PlayerEntity : Entity
             this.CancelCombo();
         }
         this.CurrentAction = ActionNone.Default;
+        this.alreadyPlayedThisTurn = false;
     }
 
     private void SetAction(ActionBase newAction)
@@ -36,9 +44,14 @@ public class PlayerEntity : Entity
             this.CurrentAction = ActionNone.Default;
             return;
         }
+        if (this.alreadyPlayedThisTurn)
+        {
+            return;
+        }
 
         this.CurrentAction = newAction;
         this.actionsCombo.Add(this.CurrentAction);
+        this.alreadyPlayedThisTurn = true;
     }
 
     private void CancelCombo()

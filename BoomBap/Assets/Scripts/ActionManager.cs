@@ -1,7 +1,13 @@
 ﻿public class ActionManager : Singleton<ActionManager>
 {
-    public Entity PlayerEntity;
-    public Entity BossEntity;
+    public PlayerEntity PlayerEntity;
+    public BossEntity BossEntity;
+
+    private void Start()
+    {
+        //TEMP
+        this.BossEntity.NextAction();
+    }
 
     public void ResolveTurn()
     {
