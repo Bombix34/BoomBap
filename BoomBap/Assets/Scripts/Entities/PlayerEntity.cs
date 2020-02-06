@@ -5,7 +5,13 @@ public class PlayerEntity : Entity
 {
     public int ComboCount => actionsCombo.Count; 
 
-    private List<ActionBase> actionsCombo;
+    private List<ActionBase> actionsCombo = new List<ActionBase>();
+
+    protected override void Start()
+    {
+        base.Start();
+        this.CurrentAction = ActionNone.Default;
+    }
 
     void Update()
     {
