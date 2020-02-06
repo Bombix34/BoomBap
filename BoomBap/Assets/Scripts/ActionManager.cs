@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class ActionManager : MonoBehaviour
+﻿public class ActionManager : Singleton<ActionManager>
 {
     public Entity PlayerEntity;
     public Entity BossEntity;
