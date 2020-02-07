@@ -8,6 +8,9 @@ public class TestBpm : MonoBehaviour
 
     private TickManager tickManager;
 
+    [SerializeField]
+    private InputSettings playerInputSettings;
+
     private List<float> timesInputList;
 
     [SerializeField]
@@ -23,6 +26,8 @@ public class TestBpm : MonoBehaviour
     private Text textBPM;
     [SerializeField]
     private Text startTimeText;
+
+    private float lastBeatInputInSec = 0f;
 
     private void Start()
     {
@@ -43,7 +48,7 @@ public class TestBpm : MonoBehaviour
         {
             startIsSetup = true;
             startTime = tickManager.TimeSinceSongStart;
-            ShowStartTime(startTime);
+            ShowStartTime();
         }
     }
 
@@ -72,7 +77,7 @@ public class TestBpm : MonoBehaviour
         textBPM.text = bpm.ToString();
     }
 
-    private void ShowStartTime(float startTime)
+    private void ShowStartTime()
     {
         startTimeText.text = startTime.ToString();
     }

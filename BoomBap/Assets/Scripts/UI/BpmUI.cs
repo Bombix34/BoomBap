@@ -14,6 +14,7 @@ public class BpmUI : MonoBehaviour
     private void Start()
     {
         m_cadre = this.GetComponent<Image>();
+        TickManager.Instance.OnTickEvent.AddListener(Feedback);
     }
 
     public void Feedback()

@@ -1,15 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TickManager : Singleton<TickManager>
 {
     [SerializeField]
     private MusicDatas m_currentMusic;
-    [SerializeField]
-    private BpmUI m_bpmUI;
-    [SerializeField]
+
     private AudioSource m_audioSource;
+    private UnityEvent m_onTickEvent;
 
     //The number of seconds for each song beat
     private float m_secPerBeat;
@@ -19,17 +19,26 @@ public class TickManager : Singleton<TickManager>
     private float m_songPositionSinceBeat;
 
     //Current song position, in beats
-    public float m_songPositionInBeats;
+    private float m_songPositionInBeats;
 
     private float m_prevSongPositionInBeats=0f;
 
-    //How many seconds have passed since the song started
-    public float m_songStartTime;
+    private float m_curBeatPositionInSec;
+    private float m_nextBeatPositionInSec;
 
-    public float test = 0f;
+    //How many seconds have passed since the song started
+    private float m_songStartTime;
+
+    private void Awake()
+    {
+        m_onTickEvent = new UnityEvent();
+        m_audioSource = gameObject.AddComponent<AudioSource>();
+        m_audioSource.volume = 0.3f;
+    }
 
     private void Start()
     {
+        m_onTickEvent.AddListener(ResetBeatPositionOnTick);
         m_audioSource.clip = m_currentMusic.Song;
 
         //Calculate the number of seconds in each beat
@@ -46,25 +55,33 @@ public class TickManager : Singleton<TickManager>
         //determine how many seconds since the song started
         m_songPositionSinceStart = (float)(AudioSettings.dspTime - m_songStartTime);
 
-        if(m_songPositionSinceStart<m_currentMusic.StartTime)
+        if(m_songPositionSinceStart < m_currentMusic.StartTime)
         {
             return;
         }
         m_songPositionSinceBeat = (float)(AudioSettings.dspTime - m_songStartTime);
-        //determine how many beats since the song started
+
+        //determine how many beats since the beat started
         m_songPositionInBeats = m_songPositionSinceBeat / m_secPerBeat;
+
         if ((int)m_songPositionInBeats != (int)m_prevSongPositionInBeats)
         {
-            m_prevSongPositionInBeats = m_songPositionInBeats;
             TickEvent();
         }
     }
 
+    private void ResetBeatPositionOnTick()
+    {
+        m_prevSongPositionInBeats = m_songPositionInBeats;
+        m_curBeatPositionInSec = m_songPositionSinceBeat;
+        m_nextBeatPositionInSec = m_curBeatPositionInSec + m_secPerBeat;
+    }
+
     private void TickEvent()
     {
-        m_bpmUI.Feedback();
-        ActionManager.Instance.ResolveTurn();
+        m_onTickEvent.Invoke();
     }
+
 
     #region GET/SET
 
@@ -73,6 +90,8 @@ public class TickManager : Singleton<TickManager>
     public AudioSource SourceAudio { get => m_audioSource; }
 
     public float TimeSinceSongStart { get => m_songPositionSinceStart; }
+
+    public UnityEvent OnTickEvent { get => m_onTickEvent; }
 
     #endregion
 }

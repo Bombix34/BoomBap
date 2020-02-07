@@ -7,6 +7,7 @@
     {
         //TEMP
         this.BossEntity.NextAction();
+        TickManager.Instance.OnTickEvent.AddListener(ResolveTurn);
     }
 
     public void ResolveTurn()
