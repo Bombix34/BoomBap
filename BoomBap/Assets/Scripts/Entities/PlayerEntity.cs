@@ -40,8 +40,7 @@ public class PlayerEntity : Entity
     {
         if (!(CurrentAction is ActionNone))//Si le joueur fait une deuxième action dans son tour
         {
-            this.CancelCombo();
-            this.CurrentAction = ActionNone.Default;
+            this.OnPlayerActionError();
             return;
         }
         if (this.alreadyPlayedThisTurn)
@@ -49,9 +48,30 @@ public class PlayerEntity : Entity
             return;
         }
 
+        var inputResolution = TickManager.Instance.GetInputResolution();
+
+        switch (inputResolution)
+        {
+            case TickManager.InputResolution.bad:
+                this.OnPlayerActionError();
+                return;
+            case TickManager.InputResolution.average:
+                break;
+            case TickManager.InputResolution.perfect:
+                break;
+            default:
+                throw new System.ArgumentException($"Unknown value {inputResolution.ToString()}", nameof(inputResolution));
+        }
+
         this.CurrentAction = newAction;
         this.actionsCombo.Add(this.CurrentAction);
         this.alreadyPlayedThisTurn = true;
+    }
+
+    private void OnPlayerActionError()
+    {
+        this.CancelCombo();
+        this.CurrentAction = ActionNone.Default;
     }
 
     private void CancelCombo()

@@ -87,6 +87,10 @@ public class TickManager : Singleton<TickManager>
     {
         m_onTickEvent.Invoke();
     }
+    public InputResolution GetInputResolution()
+    {
+        return this.GetInputResolution(this.CurrentBeat);
+    }
 
     public InputResolution GetInputResolution(float lastBeatInput)
     {

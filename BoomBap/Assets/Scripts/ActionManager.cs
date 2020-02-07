@@ -5,8 +5,8 @@
 
     private void Start()
     {
-        //TEMP
-        this.BossEntity.NextAction();
+        this.BossEntity.NextAction();//TEMP
+
         TickManager.Instance.OnTickEvent.AddListener(ResolveTurn);
     }
 
