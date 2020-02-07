@@ -8,6 +8,9 @@ public class TickManager : Singleton<TickManager>
     [SerializeField]
     private MusicDatas m_currentMusic;
 
+    [SerializeField]
+    private InputSettings m_inputSettings;
+
     private AudioSource m_audioSource;
     private UnityEvent m_onTickEvent;
 
@@ -63,6 +66,10 @@ public class TickManager : Singleton<TickManager>
 
         //determine how many beats since the beat started
         m_songPositionInBeats = m_songPositionSinceBeat / m_secPerBeat;
+        if((int)m_prevSongPositionInBeats==0)
+        {
+            m_prevSongPositionInBeats = m_songPositionInBeats;
+        }
 
         if ((int)m_songPositionInBeats != (int)m_prevSongPositionInBeats)
         {
@@ -82,6 +89,30 @@ public class TickManager : Singleton<TickManager>
         m_onTickEvent.Invoke();
     }
 
+    public InputResolution GetInputResolution()
+    {
+        InputResolution resolution = InputResolution.bad;
+        float currentTime = TimeSinceBeatStart;
+        float perfectTime = m_curBeatPositionInSec + Mathf.Abs(m_secPerBeat * m_inputSettings.perfectTickTolerance);
+        float averageTime = m_curBeatPositionInSec + Mathf.Abs(m_secPerBeat * m_inputSettings.averageTickTolerance);
+        if(currentTime<perfectTime)
+        {
+            resolution = InputResolution.perfect;
+        }
+        else if(currentTime<averageTime)
+        {
+            resolution = InputResolution.average;
+        }
+        print("beat time: " + m_curBeatPositionInSec);
+        print("current time: "+currentTime);
+        print("perfect time: " + perfectTime);
+        print("average time: " + averageTime);
+        print("resolution: " + resolution);
+        print("-----------");
+        // Debug.Break();
+        return resolution;
+    }
+
 
     #region GET/SET
 
@@ -91,7 +122,18 @@ public class TickManager : Singleton<TickManager>
 
     public float TimeSinceSongStart { get => m_songPositionSinceStart; }
 
+    public float TimeSinceBeatStart { get => m_songPositionSinceBeat; }
+
     public UnityEvent OnTickEvent { get => m_onTickEvent; }
 
+    public int CurrentBeat { get => (int)m_songPositionInBeats; }
+
     #endregion
+
+    public enum InputResolution
+    {
+        bad,
+        average,
+        perfect
+    }
 }

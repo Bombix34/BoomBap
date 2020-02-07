@@ -27,7 +27,10 @@ public class TestBpm : MonoBehaviour
     [SerializeField]
     private Text startTimeText;
 
-    private float lastBeatInputInSec = 0f;
+    [SerializeField]
+    private Text inputFeedbackText;
+
+    private int lastBeatInput = -100;
 
     private void Start()
     {
@@ -39,6 +42,7 @@ public class TestBpm : MonoBehaviour
 
     private void Update()
     {
+        TryInputBeat();
         if (Input.GetKeyDown(KeyCode.B))
         {
             timesInputList.Add((tickManager.TimeSinceSongStart));
@@ -49,6 +53,22 @@ public class TestBpm : MonoBehaviour
             startIsSetup = true;
             startTime = tickManager.TimeSinceSongStart;
             ShowStartTime();
+        }
+    }
+
+    private void TryInputBeat()
+    {
+        if(Input.GetKeyDown(KeyCode.Space) && tickManager.TimeSinceBeatStart>=0)
+        {
+            if(tickManager.CurrentBeat!=lastBeatInput)
+            {
+                lastBeatInput = tickManager.CurrentBeat;
+                inputFeedbackText.text = tickManager.GetInputResolution().ToString();
+            }
+            else
+            {
+                inputFeedbackText.text = "already tapped";
+            }
         }
     }
 

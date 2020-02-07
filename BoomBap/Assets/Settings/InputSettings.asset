@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175f0dba427284b4484c51b772468b66, type: 3}
   m_Name: InputSettings
   m_EditorClassIdentifier: 
-  perfectTickTolerance: 0.15
-  averageTickTolerance: 0.3
+  perfectTickTolerance: 0.5
+  averageTickTolerance: 0.9
