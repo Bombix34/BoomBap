@@ -60,15 +60,8 @@ public class TestBpm : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space) && tickManager.TimeSinceBeatStart>=0)
         {
-            if(tickManager.CurrentBeat!=lastBeatInput)
-            {
-                lastBeatInput = tickManager.CurrentBeat;
-                inputFeedbackText.text = tickManager.GetInputResolution().ToString();
-            }
-            else
-            {
-                inputFeedbackText.text = "already tapped";
-            }
+           lastBeatInput = tickManager.CurrentBeat;
+           inputFeedbackText.text = tickManager.GetInputResolution(lastBeatInput).ToString();
         }
     }
 
