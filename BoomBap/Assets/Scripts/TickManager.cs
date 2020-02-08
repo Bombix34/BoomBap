@@ -13,6 +13,7 @@ public class TickManager : Singleton<TickManager>
 
     private AudioSource m_audioSource;
     private UnityEvent m_onTickEvent;
+    private UnityEvent m_OnTickEndEvent;
 
     //The number of seconds for each song beat
     private float m_secPerBeat;
@@ -34,9 +35,12 @@ public class TickManager : Singleton<TickManager>
 
     private int m_lastBeatInput = -100;
 
+    private bool m_isEndTick = true;
+
     private void Awake()
     {
         m_onTickEvent = new UnityEvent();
+        m_OnTickEndEvent = new UnityEvent();
         m_audioSource = gameObject.AddComponent<AudioSource>();
         m_audioSource.volume = 0.3f;
     }
@@ -71,10 +75,15 @@ public class TickManager : Singleton<TickManager>
         {
             m_prevSongPositionInBeats = m_songPositionInBeats;
         }
-
         if ((int)m_songPositionInBeats != (int)m_prevSongPositionInBeats)
         {
+            m_isEndTick = false;
             TickEvent();
+        }
+        else if(!m_isEndTick && m_songPositionSinceBeat >= (m_curBeatPositionInSec + m_secPerBeat * m_inputSettings.averageTickTolerance))
+        {
+            m_isEndTick = true;
+            TickEndEvent();
         }
     }
 
@@ -89,6 +98,11 @@ public class TickManager : Singleton<TickManager>
     private void TickEvent()
     {
         m_onTickEvent.Invoke();
+    }
+
+    private void TickEndEvent()
+    {
+        m_OnTickEndEvent.Invoke();
     }
 
     public InputResolution GetInputResolution()
@@ -153,6 +167,8 @@ public class TickManager : Singleton<TickManager>
     public float TimeSinceBeatStart { get => m_songPositionSinceBeat; }
 
     public UnityEvent OnTickEvent { get => m_onTickEvent; }
+
+    public UnityEvent OnTickEndEvent { get => m_OnTickEndEvent; }
 
     public int CurrentBeat { get => (int)m_songPositionInBeats; }
 
