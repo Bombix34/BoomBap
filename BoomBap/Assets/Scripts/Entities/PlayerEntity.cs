@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class PlayerEntity : Entity
 {
-    public int ComboCount => actionsCombo.Count; 
+    public int ComboCount => actionsCombo.Count;
+
+    private BattleInputsManager m_inputs;
 
     private List<ActionBase> actionsCombo = new List<ActionBase>();
     private bool alreadyPlayedThisTurn = false;
@@ -11,18 +13,39 @@ public class PlayerEntity : Entity
     protected override void Start()
     {
         base.Start();
+        m_inputs = this.GetComponent<BattleInputsManager>();
         this.CurrentAction = ActionNone.Default;
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        InputsUpdate();
+    }
+
+    private void InputsUpdate()
+    {
+        if(m_inputs.ActionInputDown(BattleInputsManager.ActionInput.bottom))
         {
             this.SetAction(new ActionAttack(1));
+            print("bottom");
         }
-        if (Input.GetButtonDown("Fire2"))
+        if (m_inputs.ActionInputDown(BattleInputsManager.ActionInput.top))
+        {
+            print("top");
+        }
+        if (m_inputs.ActionInputDown(BattleInputsManager.ActionInput.right))
         {
             this.SetAction(new ActionParry(10));
+            print("right");
+        }
+        if (m_inputs.ActionInputDown(BattleInputsManager.ActionInput.left))
+        {
+            this.SetAction(new ActionParry(10));
+            print("left");
+        }
+        if(m_inputs.StartInputDown)
+        {
+            print("start");
         }
     }
 
@@ -34,6 +57,7 @@ public class PlayerEntity : Entity
         }
         this.CurrentAction = ActionNone.Default;
         this.alreadyPlayedThisTurn = false;
+        BpmUI.Instance.SwitchColor(Color.white);
     }
 
     private void SetAction(ActionBase newAction)
@@ -45,6 +69,7 @@ public class PlayerEntity : Entity
         }
         if (this.alreadyPlayedThisTurn)
         {
+            BpmUI.Instance.SwitchColor(Color.red);
             return;
         }
 
@@ -54,10 +79,13 @@ public class PlayerEntity : Entity
         {
             case TickManager.InputResolution.bad:
                 this.OnPlayerActionError();
+                BpmUI.Instance.SwitchColor(Color.red);
                 return;
             case TickManager.InputResolution.average:
+                BpmUI.Instance.SwitchColor(Color.yellow);
                 break;
             case TickManager.InputResolution.perfect:
+                BpmUI.Instance.SwitchColor(Color.green);
                 break;
             default:
                 throw new System.ArgumentException($"Unknown value {inputResolution.ToString()}", nameof(inputResolution));

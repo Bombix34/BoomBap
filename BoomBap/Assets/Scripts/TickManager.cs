@@ -23,14 +23,16 @@ public class TickManager : Singleton<TickManager>
 
     //Current song position, in beats
     private float m_songPositionInBeats;
-
     private float m_prevSongPositionInBeats=0f;
+    private float m_nextSongPositionInBeats = 0f;
 
     private float m_curBeatPositionInSec;
     private float m_nextBeatPositionInSec;
 
     //How many seconds have passed since the song started
     private float m_songStartTime;
+
+    private int m_lastBeatInput = -100;
 
     private void Awake()
     {
@@ -79,6 +81,7 @@ public class TickManager : Singleton<TickManager>
     private void ResetBeatPositionOnTick()
     {
         m_prevSongPositionInBeats = m_songPositionInBeats;
+        m_nextSongPositionInBeats = m_songPositionInBeats + 1f;
         m_curBeatPositionInSec = m_songPositionSinceBeat;
         m_nextBeatPositionInSec = m_curBeatPositionInSec + m_secPerBeat;
     }
@@ -87,12 +90,8 @@ public class TickManager : Singleton<TickManager>
     {
         m_onTickEvent.Invoke();
     }
-    public InputResolution GetInputResolution()
-    {
-        return this.GetInputResolution(this.CurrentBeat);
-    }
 
-    public InputResolution GetInputResolution(float lastBeatInput)
+    public InputResolution GetInputResolution()
     {
         InputResolution resolution = InputResolution.bad;
         float currentTime = TimeSinceBeatStart;
@@ -102,22 +101,24 @@ public class TickManager : Singleton<TickManager>
         float averageTimeNegative = 1000F;
         if (Mathf.Abs(currentTime-m_curBeatPositionInSec)<Mathf.Abs(currentTime-m_nextBeatPositionInSec))
         {
-            if (lastBeatInput != m_curBeatPositionInSec)
+            if (m_lastBeatInput != (int)m_songPositionInBeats)
             {
                 perfectTimePositive = m_curBeatPositionInSec + m_secPerBeat * m_inputSettings.perfectTickTolerance;
                 perfectTimeNegative = m_curBeatPositionInSec - (m_secPerBeat * m_inputSettings.perfectTickTolerance);
                 averageTimePositive = m_curBeatPositionInSec + m_secPerBeat * m_inputSettings.averageTickTolerance;
                 averageTimeNegative = m_curBeatPositionInSec - (m_secPerBeat * m_inputSettings.perfectTickTolerance);
+                m_lastBeatInput = (int)m_songPositionInBeats;
             }
         }
         else
         {
-            if (lastBeatInput != m_nextBeatPositionInSec)
+            if (m_lastBeatInput != (int)m_nextSongPositionInBeats)
             {
                 perfectTimePositive = m_nextBeatPositionInSec + m_secPerBeat * m_inputSettings.perfectTickTolerance;
                 perfectTimeNegative = m_nextBeatPositionInSec - (m_secPerBeat * m_inputSettings.perfectTickTolerance);
                 averageTimePositive = m_nextBeatPositionInSec + m_secPerBeat * m_inputSettings.averageTickTolerance;
                 averageTimeNegative = m_nextBeatPositionInSec - (m_secPerBeat * m_inputSettings.perfectTickTolerance);
+                m_lastBeatInput = (int)m_nextSongPositionInBeats;
             }
         }
         if(currentTime<perfectTimePositive && currentTime>perfectTimeNegative)
@@ -128,6 +129,7 @@ public class TickManager : Singleton<TickManager>
         {
             resolution = InputResolution.average;
         }
+        /*
         print("beat time: " + m_curBeatPositionInSec);
         print("current time: "+currentTime);
         print("perfect time: " + perfectTimePositive);
@@ -135,6 +137,7 @@ public class TickManager : Singleton<TickManager>
         print("resolution: " + resolution);
         print("-----------");
         // Debug.Break();
+        */
         return resolution;
     }
 

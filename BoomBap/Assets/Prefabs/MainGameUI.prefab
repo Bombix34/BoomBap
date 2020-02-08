@@ -33,8 +33,8 @@ RectTransform:
   m_Father: {fileID: 2818451683331025668}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.25862658, y: 0.71910393}
+  m_AnchorMax: {x: 0.5, y: 0.88600004}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentMusic: {fileID: 11400000, guid: 8374af2f11132a642b68e3f058369fdb, type: 2}
-  m_inputSettings: {fileID: 0}
+  m_inputSettings: {fileID: 11400000, guid: 5d88c7e868a164d949fd44e54e28b5c4, type: 2}
 --- !u!114 &112924897
 MonoBehaviour:
   m_ObjectHideFlags: 0

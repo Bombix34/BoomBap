@@ -30,8 +30,6 @@ public class TestBpm : MonoBehaviour
     [SerializeField]
     private Text inputFeedbackText;
 
-    private int lastBeatInput = -100;
-
     private void Start()
     {
         textBPM.text = "";
@@ -60,8 +58,7 @@ public class TestBpm : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space) && tickManager.TimeSinceBeatStart>=0)
         {
-           lastBeatInput = tickManager.CurrentBeat;
-           inputFeedbackText.text = tickManager.GetInputResolution(lastBeatInput).ToString();
+           inputFeedbackText.text = tickManager.GetInputResolution().ToString();
         }
     }
 
